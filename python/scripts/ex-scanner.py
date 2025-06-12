@@ -5,7 +5,6 @@ import MOODS.tools
 import MOODS.parsers
 
 import sys
-import time
 import os
 import random
 

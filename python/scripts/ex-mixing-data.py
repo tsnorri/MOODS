@@ -4,9 +4,7 @@ import MOODS.scan
 import MOODS.tools
 import MOODS.parsers
 
-import math
 import sys
-import time
 import os
 
 # actual program starts here

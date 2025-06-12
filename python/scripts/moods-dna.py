@@ -6,7 +6,7 @@ import MOODS.parsers
 import os
 import sys
 import argparse
-from itertools import groupby, chain
+from itertools import groupby
 
 
 # --- Argument parsing ---

@@ -4,9 +4,7 @@ import MOODS.scan
 import MOODS.tools
 import MOODS.parsers
 
-import math
 import sys
-import time
 import os
 
 # This example shows how to use the scan_best_hits function to obtain a desired amount

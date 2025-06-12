@@ -3,9 +3,6 @@
 import MOODS.scan
 import MOODS.tools
 
-import sys
-import time
-import os
 import random
 
 mat1 = [
