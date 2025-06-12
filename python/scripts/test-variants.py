@@ -12,15 +12,15 @@ mat1 = [
        [0,0,0,0,0], # G
        [0,0,0,0,0], # T
       ]
-      
+
 mat2 = [
        [1,1,1,1,1,1,1], # A
        [0,0,0,0,0,0,0], # C
        [0,0,0,0,0,0,0], # G
        [0,0,0,0,0,0,0], # T
       ]
-      
-      
+
+
 matrices = [mat1,mat2]
 thresholds = [5,7]
 bg = MOODS.tools.flat_bg(4)
@@ -51,14 +51,14 @@ errors = 0
 
 for i in range(len(results_variants)):
     print("---------")
-    print("Matrix {}".format(i))
+    print(f"Matrix {i}")
     for hit in results_variants[i]:
-        
+
         hit_variants = sorted([(variants[j].start_pos, variants[j].end_pos, variants[j].modified_seq) for j in hit.variants], key=itemgetter(0,1))
 
         modified_seq = list(seq.lower())
         hit_indicator = list(hit.pos*" " + len(matrices[i][0])*"^")
-            
+
         offset = 0
         for var in hit_variants:
             if var[2] != "":
@@ -71,17 +71,17 @@ for i in range(len(results_variants)):
             # print(offset)
         modified_seq = "".join(modified_seq)
         hit_indicator = "".join(hit_indicator)
-        
+
         for k in range(len(hit_indicator)):
             if (modified_seq[k] != "A" and hit_indicator[k] == "^") or (hit_indicator[k] == "-" and modified_seq[k] != "-") or (hit_indicator[k] != "-" and modified_seq[k] == "-"):
                 print("Error?")
                 errors = errors + 1
                 break
-    
-        print("Position: {}; Score: {}; Variants: {}".format(str(hit.pos), str(hit.score), str(hit_variants)))
+
+        print(f"Position: {hit.pos}; Score: {hit.score}; Variants: {hit_variants}")
         print(modified_seq)
         print(hit_indicator)
-    
+
     print("Total matches: "+str(len(results_variants[i])))
 
-print("Spotted {} error(s)".format(errors))
+print(f"Spotted {errors} error(s)")

@@ -39,7 +39,7 @@ snps = MOODS.tools.snp_variants(seq)
 # second, we'll generate some more complicated indels
 indels = []
 
-# this replaces a single symbol with string "AA" 
+# this replaces a single symbol with string "AA"
 # (end = start + 1 for single character replacements)
 indel = (10,11,"AA")
 indels.append(indel)
@@ -63,7 +63,7 @@ variants.reverse()
 results_plain = scanner.scan(seq)
 print("- Matches without variants")
 for hit in results_plain[0]:
-    print("Position: {}; Score: {}".format(str(hit.pos), str(hit.score)))
+    print(f"Position: {hit.pos}; Score: {hit.score}")
     print(seq)
     print(hit.pos*" " + len(matrices[0][0])*"^")
 
@@ -77,7 +77,7 @@ for hit in results_variants[0]:
     #  - hit.variants gives a list of indices to the variants list that was give to variant_matches function
     #  - for a variant object, variant.start_pos, variant.end_pos and variant.modified_seq gives the variant information
     hit_variants = ",".join([str((str(variants[j].start_pos), str(variants[j].end_pos), variants[j].modified_seq)) for j in hit.variants])
-    
+
     # for visualisation, we construct the modified sequence
     modified_seq = list(seq.lower())
     hit_indicator = list(hit.pos*" " + len(matrices[0][0])*"^")
@@ -90,8 +90,6 @@ for hit in results_variants[0]:
     modified_seq = "".join(modified_seq)
     hit_indicator = "".join(hit_indicator)
 
-    print("Position: {}; Score: {}; Variants: {}".format(str(hit.pos), str(hit.score), hit_variants))
+    print(f"Position: {hit.pos}; Score: {hit.score}; Variants: {hit_variants}")
     print(modified_seq)
     print(hit_indicator)
-
-

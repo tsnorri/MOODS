@@ -41,34 +41,48 @@ option_group.add_argument('--bg', metavar=('pA', 'pC', 'pG', 'pT'), nargs=4, act
 option_group.add_argument('--ps', metavar='p', action='store', dest='ps', type=float, help='total pseudocount added to each matrix column in log-odds conversion (default = 0.01)', default = 0.01)# bg
 option_group.add_argument('--log-base', metavar='x', action='store', dest='log_base', type=float, help='logarithm base for log-odds conversion (default natural logarithm)')
 option_group.add_argument('--lo-bg', metavar=('pA', 'pC', 'pG', 'pT'), nargs=4, action='store', type=float, dest='lo_bg', default = [0.25,0.25,0.25,0.25], help='background distribution for log-odds conversion (default is 0.25 for all alleles)')
-option_group.add_argument('--threshold-precision', metavar='x', action='store', dest='threshold_precision', type=float, help='specify the precision used for computing the thresholds from p-values (default = {})'.format(MOODS.tools.DEFAULT_DP_PRECISION), default = MOODS.tools.DEFAULT_DP_PRECISION)
+option_group.add_argument('--threshold-precision', metavar='x', action='store', dest='threshold_precision', type=float, help=f'specify the precision used for computing the thresholds from p-values (default = {MOODS.tools.DEFAULT_DP_PRECISION})', default = MOODS.tools.DEFAULT_DP_PRECISION)
 
 
 
 args = parser.parse_args()
 
+
+def print_message(message):
+    print(f"{os.path.basename(__file__)}: {message}", file=sys.stderr)
+
+def print_annotated_message(level, message):
+    print_message(f"{level}: {message}")
+
+def print_error(message):
+    print_annotated_message("error", message)
+
+def print_warning(message):
+    print_annotated_message("warning", message)
+
+
 # sanity check for parameters, apply effects
 
 if len(args.matrix_files) == 0 and len(args.lo_matrix_files) == 0:
-    print("{}: error: no matrix files given (use -h for help)".format(os.path.basename(__file__)), file=sys.stderr)
+    print_error("no matrix files given (use -h for help)")
     sys.exit(1)
 if len(args.sequence_files) == 0:
-    print("{}: error: no sequence files given (use -h for help)".format(os.path.basename(__file__)), file=sys.stderr)
+    print_error("no sequence files given (use -h for help)")
     sys.exit(1)
 if (args.p_val is None) and (args.t is None) and (args.max_hits is None):
-    print("{}: error: no threshold given (use -h for help)".format(os.path.basename(__file__)), file=sys.stderr)
+    print_error("no threshold given (use -h for help)")
     sys.exit(1)
 if (args.p_val is not None and args.t is not None) or (args.t is not None and args.max_hits is not None) or (args.p_val is not None and args.max_hits is not None):
-    print("{}: error: only one threshold specification allowed (use -h for help)".format(os.path.basename(__file__)), file=sys.stderr)
+    print_error("only one threshold specification allowed (use -h for help)")
     sys.exit(1)
 if args.max_hits is not None and args.batch:
-    print("{}: warning: ignoring --batch when used with -B".format(os.path.basename(__file__)), file=sys.stderr)
+    print_warning("ignoring --batch when used with -B")
 if args.t is not None and args.batch:
-    print("{}: warning: --batch is redundant when used with -t".format(os.path.basename(__file__)), file=sys.stderr)
+    print_warning("--batch is redundant when used with -t")
 
 
 if args.log_base is not None and (args.log_base <= 1):
-        print("{}: error: --log-base has to be > 1".format(os.path.basename(__file__)), file=sys.stderr)
+        print_error("--log-base has to be > 1")
         sys.exit(1)
 
 # redirect output
@@ -78,7 +92,7 @@ if args.output_file is not None:
     try:
         outfile = open(args.output_file, 'w')
     except:
-        print("{}: error: could not open output file {} for writing".format(os.path.basename(__file__), args.output_file), file=sys.stderr)
+        print_error("could not open output file {} for writing")
         sys.exit(1)
     output_target = outfile
 
@@ -181,7 +195,7 @@ def print_results(header, seq, matrices, matrix_names, results, results_snps=[],
     for (matrix, matrix_name,result) in zip(matrices, matrix_names, results):
         l = 0
         if args.verbosity >= 2:
-            print("{}: {}: {} matches for {}".format(os.path.basename(__file__), header, len(result), matrix_name), file=sys.stderr)
+            print_message(f"{header}: {len(result)} matches for {matrix_name}")
         if len(matrix) == 4:
             l = len(matrix[0])
         if len(matrix) == 16:
@@ -198,7 +212,7 @@ def print_results(header, seq, matrices, matrix_names, results, results_snps=[],
 
 # --- Load matrices ---
 if args.verbosity >= 1:
-    print("{}: reading matrices ({} matrix files)".format(os.path.basename(__file__), len(args.matrix_files)+len(args.lo_matrix_files)), file=sys.stderr)
+    print_message(f"reading matrices ({len(args.matrix_files)+len(args.lo_matrix_files)} matrix files)")
 
 # matrix_names = map(os.path.basename, [n for n in args.matrix_files + args.lo_matrix_files])
 matrix_names = [os.path.basename(n) for n in args.matrix_files + args.lo_matrix_files]
@@ -210,13 +224,13 @@ for filename in args.matrix_files:
     if filename[-4:] != '.adm': # let's see if it's pfm
         valid, matrix = pfm_to_log_odds(filename)
         if valid and args.verbosity >= 3:
-            print("{}: read matrix file {} as pfm (converted to PWM)".format(os.path.basename(__file__), filename), file=sys.stderr)
+            print_message(f"read matrix file {filename} as pfm (converted to PWM)")
     if not valid: # well maybe it is adm
         valid, matrix = adm_to_log_odds(filename)
         if valid and args.verbosity >= 3:
-            print("{}: read matrix file {} as adm (converted to high-order PWM)".format(os.path.basename(__file__), filename), file=sys.stderr)
+            print_message(f"read matrix file {filename} as adm (converted to high-order PWM)")
     if not valid:
-        print("{}: error: could not parse matrix file {}".format(os.path.basename(__file__), filename), file=sys.stderr)
+        print_error(f"could not parse matrix file {filename}")
         sys.exit(1)
     else:
         matrices.append(matrix)
@@ -227,13 +241,13 @@ for filename in args.lo_matrix_files:
     if filename[-4:] != '.adm': # let's see if it's pfm
         valid, matrix = pfm(filename)
         if valid and args.verbosity >= 3:
-            print("{}: read matrix file {} as pfm".format(os.path.basename(__file__), filename), file=sys.stderr)
+            print_message(f"read matrix file {filename} as pfm")
     if not valid: # well maybe it is adm
         valid, matrix = adm(filename)
         if valid and args.verbosity >= 3:
-            print("{}: read matrix file {} as adm".format(os.path.basename(__file__), filename), file=sys.stderr)
+            print_message(f"read matrix file {filename} as adm")
     if not valid:
-        print("{}: error: could not parse matrix file {}".format(os.path.basename(__file__), filename), file=sys.stderr)
+        print_error(f"could not parse matrix file {filename}")
         sys.exit(1)
     else:
         matrices.append(matrix)
@@ -257,24 +271,24 @@ if args.p_val is not None or args.t is not None:
     if args.p_val is not None and args.batch:
         bg = args.bg
         if args.verbosity >= 1:
-            print("{}: computing thresholds from p-value".format(os.path.basename(__file__)), file=sys.stderr)
+            print_message("computing thresholds from p-value")
         thresholds = [MOODS.tools.threshold_from_p_with_precision(m,bg,args.p_val,args.threshold_precision,4) for m in matrices_all]
         if args.verbosity >= 3:
             for (m, t) in zip(matrix_names, thresholds):
-                print("{}: threshold for {} is {}".format(os.path.basename(__file__), m, t), file=sys.stderr)
+                print_message(f"threshold for {m} is {t}")
         if args.verbosity >= 1:
-            print("{}: preprocessing matrices for scanning".format(os.path.basename(__file__)), file=sys.stderr)
+            print_message("preprocessing matrices for scanning")
         scanner = MOODS.scan.Scanner(7)
         bg = args.bg
         scanner.set_motifs(matrices_all, bg, thresholds)
 
     for seq_file in args.sequence_files:
         if args.verbosity >= 1:
-            print("{}: reading sequence file {}".format(os.path.basename(__file__), seq_file), file=sys.stderr)
+            print_message(f"reading sequence file {seq_file}")
         try:
             seq_iterator = read_text_or_fasta(seq_file)
         except Exception:
-            print("{}: error: could not parse sequence file {}".format(os.path.basename(__file__), seq_file), file=sys.stderr)
+            print_error(f"could not parse sequence file {seq_file}")
             sys.exit(1)
 
         for header, seq in seq_iterator:
@@ -282,20 +296,20 @@ if args.p_val is not None or args.t is not None:
             if args.p_val is not None and not args.batch:
                 bg = MOODS.tools.bg_from_sequence_dna(seq,1)
                 if args.verbosity >= 3:
-                    print("{}: estimated background for {} is {}".format(os.path.basename(__file__), header, bg), file=sys.stderr)
+                    print_message(f"estimated background for {header} is {bg}")
                 if args.verbosity >= 1:
-                    print("{}: computing thresholds from p-value for sequence {}".format(os.path.basename(__file__), header), file=sys.stderr)
+                    print_message(f"computing thresholds from p-value for sequence {header}")
                 thresholds = [MOODS.tools.threshold_from_p_with_precision(m,bg,args.p_val,args.threshold_precision,4) for m in matrices_all]
                 if args.verbosity >= 3:
                     for (m, t) in zip(matrix_names, thresholds):
-                        print("{}: threshold for {} is {}".format(os.path.basename(__file__), m, t), file=sys.stderr)
+                        print_message(f"threshold for {m} is {t}")
                 if args.verbosity >= 1:
-                    print("{}: preprocessing matrices for scanning".format(os.path.basename(__file__)), file=sys.stderr)
+                    print_message("preprocessing matrices for scanning")
                 scanner = MOODS.scan.Scanner(7)
                 scanner.set_motifs(matrices_all, bg, thresholds)
 
             if args.verbosity >= 1:
-                print("{}: scanning sequence {}".format(os.path.basename(__file__), header), file=sys.stderr)
+                print_message(f"scanning sequence {header}")
             assert(scanner)
             results = scanner.scan(seq)
             if args.no_snps:
@@ -304,7 +318,7 @@ if args.p_val is not None or args.t is not None:
             else:
                 snps = MOODS.tools.snp_variants(seq)
                 if args.verbosity >= 2:
-                     print("{}: {} variants for sequence {}".format(os.path.basename(__file__), len(snps), header), file=sys.stderr)
+                     print_message(f"{len(snps)} variants for sequence {header}")
                 results_snps = scanner.variant_matches(seq,snps)
             print_results(header, seq, matrices, matrix_names, results, results_snps, snps)
 
@@ -317,16 +331,16 @@ elif args.max_hits is not None:
         N = (args.max_hits * 2)/3
     for seq_file in args.sequence_files:
         if args.verbosity >= 1:
-            print("{}: reading sequence file {}".format(os.path.basename(__file__), seq_file), file=sys.stderr)
+            print_message(f"reading sequence file {seq_file}")
         try:
             seq_iterator = read_text_or_fasta(seq_file)
         except Exception:
-            print("{}: error: could not parse sequence file {}".format(os.path.basename(__file__), seq_file), file=sys.stderr)
+            print_error(f"could not parse sequence file {seq_file}")
             sys.exit(1)
 
         for header, seq in seq_iterator:
             if args.verbosity >= 1:
-                print("{}: scanning sequence {}".format(os.path.basename(__file__), header), file=sys.stderr)
+                print_message(f"scanning sequence {header}")
             results = MOODS.scan.scan_best_hits_dna(seq, matrices_all, N)
             if args.no_snps:
                 results_snps = [[]]*len(matrices_all)
@@ -334,7 +348,7 @@ elif args.max_hits is not None:
             else:
                 snps = MOODS.tools.snp_variants(seq)
                 if args.verbosity >= 2:
-                     print("{}: {} variants for sequence {}".format(os.path.basename(__file__), len(snps), header), file=sys.stderr)
+                     print_message(f"{len(snps)} variants for sequence {header}")
                 snp_thresholds = [min((r.score for r in rs)) for rs in results]
                 if not args.no_rc:
                     snp_thresholds = 2 * list(map(min, zip(snp_thresholds[:len(matrix_names)], snp_thresholds[len(matrix_names):])))
