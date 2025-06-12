@@ -10,7 +10,7 @@ import os
 import random
 
 if len(sys.argv) < 2:
-	print "usage: python ex-scanner.py [matrix directory]"
+	print("usage: python ex-scanner.py [matrix directory]")
 	sys.exit(1)
 
 # read the matrix files
@@ -34,7 +34,7 @@ scanner = MOODS.scan.Scanner(7) # parameter is the window size
 scanner.set_motifs(matrices, bg, thresholds)
 
 # we'll generate 100 random sequences
-for i in xrange(100):
+for i in range(100):
 	seq = ''.join([random.choice(['A', 'C', 'G', 'T']) for j in range(10000)])
 	results = scanner.scan(seq)
 
@@ -45,4 +45,4 @@ for i in xrange(100):
 	# this is mostly intended to prevent things from slowing down too much
 	# when the threshold is too loose for some reason (see also ex-best-hits.py)
 
-	print "Sequence", i, "hits:", sum([len(r) for r in results])
+	print("Sequence", i, "hits:", sum([len(r) for r in results]))

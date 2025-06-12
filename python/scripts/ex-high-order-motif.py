@@ -51,4 +51,4 @@ results = MOODS.scan.scan_dna(seq, matrices, bg, thresholds, 2)
 for mat, result in zip(matrices, results):
     for r in result:
         hitseq = seq[r.pos:r.pos+len(mat[0])]
-        print str(r.pos) + '|' + hitseq + '|'  + str(r.score)
+        print(str(r.pos) + '|' + hitseq + '|'  + str(r.score))

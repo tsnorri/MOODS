@@ -23,4 +23,4 @@ bg = MOODS.tools.flat_bg(5)
 res = MOODS.scan.scan(seq, [mat], bg, [6], 6, alph)
 
 for x in res[0]:
-    print x.pos, x.score, seq[x.pos:x.pos+5]
+    print(x.pos, x.score, seq[x.pos:x.pos+5])

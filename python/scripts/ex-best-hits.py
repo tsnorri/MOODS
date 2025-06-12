@@ -13,13 +13,13 @@ import os
 # of highest-scoring hits.
 
 if len(sys.argv) < 3:
-	print "usage: python ex-best-hits.py [sequence file] [matrix directory]"
+	print("usage: python ex-best-hits.py [sequence file] [matrix directory]")
 	sys.exit(1)
 
 # read an sequence
 file_name = sys.argv[1]
 with open(file_name, "r") as file_handle:
-    first = file_handle.next().strip()
+    first = next(file_handle).strip()
     if first[0] == '>':
         first = ''
     seq = "".join([first] + [line.strip() for line in file_handle])
@@ -48,11 +48,11 @@ results = MOODS.scan.scan_best_hits_dna(seq, matrices, 1000)
 # Specifically, MOODS tries to guess a good threshold to produce 10000-30000 hits; if this does not succeed, MOODS uses
 # binary search to try and refine the threshold. By default we'll do 10 iterations of this, after which we
 # return *some* amount of hits that is less than 100000 (may be 0 in some cases)
-# 
+#
 # Extra parameters can be used to adjust these values:
 #
 # results = MOODS.scan.scan_best_hits_dna(seq, matrices, target, iterations = 10, MULT = 3, UPPER_MULT = 10, window_size = 7)
-# 
+#
 # where
 #   target       is the number of hits we want
 #   iterations   is the number of iterations (0 for unlimited, is guaranteed to finish at some point but may be slow)
@@ -70,4 +70,4 @@ results = MOODS.scan.scan_best_hits_dna(seq, matrices, 1000)
 
 
 for (matrix,matrix_name,result) in zip(matrices, matrix_names, results):
-    print matrix_name + "|" + str(len(result))
+    print(matrix_name + "|" + str(len(result)))

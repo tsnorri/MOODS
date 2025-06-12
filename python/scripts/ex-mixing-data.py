@@ -12,13 +12,13 @@ import os
 # actual program starts here
 
 if len(sys.argv) < 3:
-	print "usage: python ex-mixing-data.py [sequence file] [matrix directory]"
+	print("usage: python ex-mixing-data.py [sequence file] [matrix directory]")
 	sys.exit(1)
 
 # read an sequence
 file_name = sys.argv[1]
 with open(file_name, "r") as file_handle:
-    first = file_handle.next().strip()
+    first = next(file_handle).strip()
     if first[0] == '>':
         first = ''
     seq = "".join([first] + [line.strip() for line in file_handle])
@@ -54,8 +54,8 @@ for (matrix,matrix_name,result) in zip(matrices, matrix_names, results):
         l = len(matrix[0]) + 1
     for r in sorted(result, key=lambda r: r.pos):
         hitseq = seq[r.pos:r.pos+l]
-        print matrix_name + '|' + str(r.pos) + '|' + hitseq + '|'  + str(r.score)
+        print(matrix_name + '|' + str(r.pos) + '|' + hitseq + '|'  + str(r.score))
 
-print "Total hits:", sum([len(r) for r in results])
+print("Total hits:", sum([len(r) for r in results]))
 for i, name, m in zip(range(len(results)), matrix_names, results):
-    print "Hits for", name, ":", len(m)
+    print("Hits for", name, ":", len(m))
