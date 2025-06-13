@@ -14,6 +14,8 @@ namespace MOODS { namespace scan{
 
 class Motif {
 public:
+    virtual ~Motif() {}
+
     virtual std::pair<bool, double> window_match(bits_t seq, bits_t shift) = 0;
     virtual std::pair<bool, double> check_hit(const std::string& s,
                                               const std::vector<unsigned char>& alphabet_map,
