@@ -32,13 +32,13 @@ private:
     score_matrix mat;
     std::vector<unsigned int> lookahead_order;
     std::vector<double> lookahead_scores;
-    
+
     unsigned int l; // window size
     unsigned int m; // length
     unsigned int a; // alphabet size
-    
+
     unsigned int wp; // window position
-    double T; 
+    double T;
 public:
     Motif0 (const score_matrix& matrix, const vector<double>& bg, unsigned int window_size, double threshold);
 
@@ -67,20 +67,20 @@ private:
     unsigned int l; // window size
     unsigned int m; // length (of the underlying sequence)
     unsigned int cols; // m - q + 1
-    unsigned int rows; 
+    unsigned int rows;
     unsigned int a; // alphabet size
     unsigned int q; // q-gram length
 
     bits_t SHIFT;
     bits_t MASK; // bit-mask of length q
     bits_t Q_SHIFT;
-    bits_t Q_CODE_SIZE; 
+    bits_t Q_CODE_SIZE;
     bits_t Q_MASK; // bit-mask of length q-1
 
     vector<vector<double> > P; // prefix scores
     vector<vector<double> > S; // suffix scores for in-window testing
 
-    
+
     unsigned int wp; // window position
     double T;
 public:
