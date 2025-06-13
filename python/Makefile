@@ -12,6 +12,7 @@ GENERATED_FILES =		MOODS/misc.py \
 
 PYTHON ?= python3
 SWIG ?= swig
+SWIG_EXTRA_FLAGS ?=
 
 
 all: wheel
@@ -33,4 +34,4 @@ core:
 $(CXX_INPUTS): core
 
 %_wrap.cxx: %.i
-	$(SWIG) -c++ -python -outdir MOODS/ $<
+	$(SWIG) -c++ -python -Wall $(SWIG_EXTRA_FLAGS) -outdir MOODS/ $<
