@@ -328,7 +328,7 @@ elif args.max_hits is not None:
         N = args.max_hits
     else:
         # this is a bit tricky
-        N = (args.max_hits * 2)/3
+        N = (args.max_hits * 2)//3
     for seq_file in args.sequence_files:
         if args.verbosity >= 1:
             print_message(f"reading sequence file {seq_file}")
