@@ -253,7 +253,7 @@ std::pair<bool, double> MotifH::check_hit(const std::string& s, const vector<uns
                 return std::make_pair(false, score);
             }
 
-            CODE = MASK & (CODE << SHIFT) ^ alphabet_map[s[ii + i + q - 1]];
+            CODE = (MASK & (CODE << SHIFT)) ^ alphabet_map[s[ii + i + q - 1]];
             score += mat[CODE][i];
         }
     }
