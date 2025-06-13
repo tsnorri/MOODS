@@ -20,7 +20,7 @@ namespace MOODS { namespace scan{
     // state struct for the variant matching code
     struct state
     {
-        vector<size_t> vs;
+        std::vector<size_t> vs;
         const std::string prefix;
         //size_t first_required_index;
         size_t seq_start_pos;

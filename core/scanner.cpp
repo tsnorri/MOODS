@@ -404,7 +404,7 @@ namespace MOODS { namespace scan{
 
         // first, we get modified hits for the current set of active sequence variants
 
-        string current_seq = current.prefix + seq.substr(variants[current.vs.back()].end_pos, remaining);
+        std::string current_seq = current.prefix + seq.substr(variants[current.vs.back()].end_pos, remaining);
 
         vector<vector<match>> current_results = this->scan(current_seq);
 
@@ -440,7 +440,7 @@ namespace MOODS { namespace scan{
                       (nv.end_pos == seq.size() && nv.modified_seq.size() == 0))
                     )
                 {
-                    string next_prefix = current.prefix + seq.substr(cv.end_pos, nv.start_pos - cv.end_pos) + nv.modified_seq;
+                    std::string next_prefix = current.prefix + seq.substr(cv.end_pos, nv.start_pos - cv.end_pos) + nv.modified_seq;
                     auto next_variants = current.vs;
                     next_variants.push_back(next_variant);
 
@@ -492,7 +492,7 @@ namespace MOODS { namespace scan{
                             prefix_length = variants[i].start_pos;
                         }
 
-                        string next_prefix = seq.substr(prefix_start, prefix_length) + variants[i].modified_seq;
+                        std::string next_prefix = seq.substr(prefix_start, prefix_length) + variants[i].modified_seq;
 
                         state s = {vector<size_t>(1,i), // active variants
                                    next_prefix, // prefix string

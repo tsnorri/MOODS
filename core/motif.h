@@ -6,10 +6,6 @@
 
 #include <utility>
 
-using std::vector;
-using std::string;
-using std::size_t;
-
 namespace MOODS { namespace scan{
 
 class Motif {
@@ -42,7 +38,7 @@ private:
     unsigned int wp; // window position
     double T;
 public:
-    Motif0 (const score_matrix& matrix, const vector<double>& bg, unsigned int window_size, double threshold);
+    Motif0 (const score_matrix& matrix, const std::vector<double>& bg, unsigned int window_size, double threshold);
 
     std::pair<bool, double> window_match(bits_t seq, bits_t shift);
     std::pair<bool, double> check_hit(const std::string& s, const std::vector<unsigned char>& alphabet_map, const std::size_t window_match_pos, double score);
@@ -57,12 +53,12 @@ public:
 // high-order PWM
 class MotifH : public Motif {
 private:
-    vector<double> expected_scores(const vector<double> &bg);
-    vector<vector<double> > max_scores_f(size_t start, size_t end);
-    vector<vector<double> > max_scores_b(size_t start, size_t end);
-    size_t window_position(const vector<double>& es);
-    vector<vector<double> > max_prefix_scores();
-    vector<vector<double> > max_suffix_scores();
+    std::vector<double> expected_scores(const std::vector<double> &bg);
+    std::vector<std::vector<double> > max_scores_f(size_t start, size_t end);
+    std::vector<std::vector<double> > max_scores_b(size_t start, size_t end);
+    size_t window_position(const std::vector<double>& es);
+    std::vector<std::vector<double> > max_prefix_scores();
+    std::vector<std::vector<double> > max_suffix_scores();
 
     score_matrix mat;
 
@@ -79,15 +75,15 @@ private:
     bits_t Q_CODE_SIZE;
     bits_t Q_MASK; // bit-mask of length q-1
 
-    vector<vector<double> > P; // prefix scores
-    vector<vector<double> > S; // suffix scores for in-window testing
+    std::vector<std::vector<double> > P; // prefix scores
+    std::vector<std::vector<double> > S; // suffix scores for in-window testing
 
 
     unsigned int wp; // window position
     double T;
 public:
     MotifH (const score_matrix& matrix,
-            const vector<double>& bg,
+            const std::vector<double>& bg,
             unsigned int window_size,
             double threshold,
             unsigned int alphabet_size);
