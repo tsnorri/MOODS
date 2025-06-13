@@ -23,8 +23,8 @@ vector<double> MotifH::expected_scores(const vector<double> &bg){
     const bits_t A_MASK = (1 << (SHIFT)) - 1;
 
     vector<double> ret(cols, 0);
-    for (int i = 0; i < cols; ++i){
-        for (int j = 0; j < rows; ++j){
+    for (unsigned int i = 0; i < cols; ++i){
+        for (unsigned int j = 0; j < rows; ++j){
             double bg_prop = 1;
             for (unsigned int k = 0; k < q; ++k){
                 bg_prop *= bg[A_MASK & (j >> (SHIFT * (q - 1 - k)))];
