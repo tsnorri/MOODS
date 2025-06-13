@@ -141,8 +141,8 @@ double threshold_from_p_with_precision(const score_matrix &pssm, const vector<do
 {
 
     // Approximate the scoring matrix with integer matrix for DP
-    long a = pssm.size();
-    long n = pssm[0].size();
+    const auto a = pssm.size();
+    const auto n = pssm[0].size();
 
 
     vector<vector<long> > mat(a, vector<long>(n));
@@ -438,9 +438,8 @@ double min_score(const score_matrix &mat, const size_t a){
 // temporary threshold-from-p for high-order pwms
 double threshold_from_p_with_precision(const score_matrix &pssm, const vector<double> &bg, const double &p, const double precision, const size_t a)
 {
-
-    long rows = pssm.size();
-    long cols = pssm[0].size();
+    const auto rows = pssm.size();
+    const auto cols = pssm[0].size();
 
     unsigned int q = MOODS::misc::q_gram_size(rows, a);
 
