@@ -9,7 +9,7 @@
 #include <memory>
 
 namespace MOODS { namespace scan{
-    
+
     struct scanner_output
     {
         double score;
@@ -27,7 +27,7 @@ namespace MOODS { namespace scan{
         size_t variant_start_pos;
         int depth;
     };
-    
+
     class Scanner {
     public:
         Scanner(unsigned int window_size);
@@ -61,7 +61,7 @@ namespace MOODS { namespace scan{
         unsigned int max_motif_size;
 
         void initialise_hit_table();
-        template<typename T> void process_matches(const std::string& s, T& match_handler);        
+        template<typename T> void process_matches(const std::string& s, T& match_handler);
         void variant_matches_recursive(std::vector<std::vector<MOODS::match_with_variant> >& results, const state& current,
                                                 const std::string& seq, const std::vector<MOODS::variant>& variants, int max_depth);
     };
