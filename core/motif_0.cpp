@@ -101,12 +101,12 @@ vector<unsigned int> compute_lookahead_order(const vector<double> &ed, unsigned 
         {
             order[i-l] = i;
         }
-        
+
         row_comp comp;
         comp.ed = &(ed);
-        
+
         std::sort(order.begin(), order.end(), comp);
-        
+
         return order;
     }
 }
@@ -120,7 +120,7 @@ vector<double> compute_lookahead_scores(const score_matrix &mat, const vector<un
     else
     {
         std::vector<double> scores(m-l,0);
-        
+
         double total = 0;
         for (int i = m-l-1; i >= 0; --i)
         {
@@ -141,26 +141,26 @@ Motif0::Motif0 (const score_matrix& matrix, const vector<double>& bg, unsigned i
     mat = matrix;
     l = window_size;
     T = threshold;
-    
+
     m = mat[0].size();
     a = mat.size();
-    
+
     vector<double> ed = expected_differences(mat, bg);
-    
-    
+
+
     wp = window_position(ed, l, m);
-    
+
     lookahead_order = compute_lookahead_order(ed, l, wp, m);
-    
+
     lookahead_scores = compute_lookahead_scores(mat, lookahead_order, l, m, a);
 }
 
 std::pair<bool, double> Motif0::window_match(bits_t seq, bits_t shift)
 {
-    
+
     double score = 0;
     bits_t MASK = MOODS::misc::mask(a);
-    
+
     if (l >= m){
         for (unsigned int i = 0; i < m; ++i)
         {
@@ -178,7 +178,7 @@ std::pair<bool, double> Motif0::window_match(bits_t seq, bits_t shift)
         for (unsigned int i = 0; i < l; ++i)
         {
             bits_t c = MASK & (seq >> (shift * (l - i - 1)));
-            if (c >= a){ 
+            if (c >= a){
                 // see above
                 return std::make_pair(false, -std::numeric_limits<double>::infinity());
             }
@@ -186,7 +186,7 @@ std::pair<bool, double> Motif0::window_match(bits_t seq, bits_t shift)
         }
         return std::make_pair(score + lookahead_scores[0] >= T, score);
     }
-    
+
 }
 
 std::pair<bool, double> Motif0::check_hit(const std::string& s, const vector<unsigned char>& alphabet_map, const std::size_t window_match_pos, double score)
@@ -194,9 +194,9 @@ std::pair<bool, double> Motif0::check_hit(const std::string& s, const vector<uns
     if (m <= l){
         return  std::make_pair(true, score); // matrix fits fully to the window, so the window score is what we wanted...
     }
-       
+
     size_t ii = window_match_pos - wp;
-    
+
     for (size_t i = 0; i < m - l; ++i)
     {
         if (score + lookahead_scores[i] < T)
