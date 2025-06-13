@@ -33,31 +33,31 @@ vector<double> bg_from_sequence_dna(const std::string &seq, const double ps)
     unsigned int alphabet_size = 4;
     vector<double> bg(alphabet_size);
     vector<unsigned int> counts(5, 0);
-    
+
     char c;
     // char value;
-    
+
     vector<unsigned char> m(256, 4);
-    
+
     m[(unsigned char)'a'] = 0;
     m[(unsigned char)'A'] = 0;
-    
+
     m[(unsigned char)'c'] = 1;
     m[(unsigned char)'C'] = 1;
-    
+
     m[(unsigned char)'g'] = 2;
     m[(unsigned char)'G'] = 2;
-    
+
     m[(unsigned char)'t'] = 3;
-    m[(unsigned char)'T'] = 3;    
-    
+    m[(unsigned char)'T'] = 3;
+
     for (size_t i = 0; i < seq.size(); ++i){
         c = (unsigned char)seq[i];
         counts[m[c]]++;
     }
-    
+
     unsigned int count_all = counts[0] + counts[1] + counts[2] + counts[3];
-    
+
     for (unsigned int j = 0; j < alphabet_size; ++j){
         bg[j] = (((double)counts[j] + ps)/ ((double)count_all + alphabet_size * ps));
     }
@@ -104,22 +104,22 @@ score_matrix log_odds(const score_matrix &mat, const vector<double> &bg, const d
 // Transforms a weight matrix into a PSSM with non-natural logarithm
 score_matrix log_odds(const score_matrix &mat, const vector<double> &bg, const double ps, const double log_base)
 {
-    
+
     size_t a = mat.size();
     size_t n = mat[0].size();
-    
+
     score_matrix ret = log_odds(mat, bg, ps);
-    
+
     for (size_t i = 0; i < n; ++i)
     {
         for (size_t j = 0; j < a; ++j) {
             ret[j][i] = ret[j][i] / log(log_base);
         }
     }
-    
+
     return ret;
 
-    
+
     //
     // score_matrix ret(a, vector<double>(n));
     //
@@ -139,7 +139,7 @@ score_matrix log_odds(const score_matrix &mat, const vector<double> &bg, const d
 // // Calculates a threshold for a scoring matrix from a given p value
 double threshold_from_p_with_precision(const score_matrix &pssm, const vector<double> &bg, const double &p, const double precision)
 {
-    
+
     // Approximate the scoring matrix with integer matrix for DP
     long a = pssm.size();
     long n = pssm[0].size();
@@ -204,13 +204,13 @@ double threshold_from_p_with_precision(const score_matrix &pssm, const vector<do
     }
 
 
-        
+
     double sum = table0[R];
 
     if (sum > p){
         return max_score(pssm) - min_delta(pssm)/2;
     }
-        
+
     for (long r = R-1; r >= 0; --r)
     {
         sum += table0[r];
@@ -314,7 +314,7 @@ score_matrix log_odds(const vector<vector<double>> &mat, const vector<vector<dou
             for (size_t j = 0; j < a; ++j){
                 ret[(CODE << SHIFT) | j][i] = log( (mat[(CODE << SHIFT) | j][i] + ps*bg[j]) / column_sum) - log(bg[j]);
             }
-        }        
+        }
     }
 
     // lower-order terms for the first position
@@ -343,16 +343,16 @@ score_matrix log_odds(const vector<vector<double>> &mat, const vector<vector<dou
 {
     size_t rows = mat.size();
     size_t cols = mat[0].size();
-    
+
     score_matrix ret = log_odds(mat, low_order_terms, bg, ps, a);
-    
+
     for (size_t i = 0; i < cols; ++i)
     {
         for (size_t j = 0; j < rows; ++j) {
             ret[j][i] = ret[j][i] / log(log_base);
         }
     }
-    
+
     return ret;
 }
 
@@ -362,9 +362,9 @@ score_matrix reverse_complement(const vector<vector<double>> &mat, const size_t 
     size_t q = MOODS::misc::q_gram_size(mat.size(), a);
     size_t rows = mat.size();
     size_t cols = mat[0].size();
-    
+
     score_matrix ret(rows, vector<double>(cols));
-    
+
     for (size_t i = 0; i < cols; ++i){
         for (size_t j = 0; j < rows; ++j){
             ret[misc::rc_tuple(j, a, q)][cols - i - 1] = mat[j][i];
@@ -387,10 +387,10 @@ double max_score(const score_matrix &mat, const size_t a){
     const bits_t Q_MASK = Q_CODE_SIZE - 1;
 
     vector<double> p_scores(Q_CODE_SIZE, 0);
-        
+
     for (unsigned int i = 0; i < cols; ++i){
         vector<double> p_scores_n(Q_CODE_SIZE, -std::numeric_limits<double>::infinity());
-        
+
         for (unsigned int j = 0; j < rows; ++j){
             p_scores_n[j & Q_MASK] = std::max(mat[j][i] + p_scores[j >> SHIFT], p_scores_n[j & Q_MASK]);
         }
@@ -417,10 +417,10 @@ double min_score(const score_matrix &mat, const size_t a){
     const bits_t Q_MASK = Q_CODE_SIZE - 1;
 
     vector<double> p_scores(Q_CODE_SIZE, 0);
-        
+
     for (unsigned int i = 0; i < cols; ++i){
         vector<double> p_scores_n(Q_CODE_SIZE, std::numeric_limits<double>::infinity());
-        
+
         for (unsigned int j = 0; j < rows; ++j){
             p_scores_n[j & Q_MASK] = std::min(mat[j][i] + p_scores[j >> SHIFT], p_scores_n[j & Q_MASK]);
         }
@@ -431,14 +431,14 @@ double min_score(const score_matrix &mat, const size_t a){
     for (size_t i = 0; i < p_scores.size(); ++i){
         best = std::min(best, p_scores[i]);
     }
-    
+
     return best;
 }
 
 // temporary threshold-from-p for high-order pwms
 double threshold_from_p_with_precision(const score_matrix &pssm, const vector<double> &bg, const double &p, const double precision, const size_t a)
 {
-    
+
     long rows = pssm.size();
     long cols = pssm[0].size();
 
@@ -525,7 +525,7 @@ double threshold_from_p_with_precision(const score_matrix &pssm, const vector<do
 
 
     double sum = table2[R];
-    
+
     if (sum > p){
         return max_score(pssm, a) - min_delta(pssm)/2;;
     }
@@ -549,46 +549,46 @@ double threshold_from_p(const score_matrix &pssm, const vector<double> &bg, cons
 
 
 vector<MOODS::variant> snp_variants(const std::string &seq){
-    
-    vector<MOODS::variant> ret;    
+
+    vector<MOODS::variant> ret;
     vector<std::string> snp_alt(256);
-    
+
     snp_alt[(unsigned char)'w'] = "AT";
     snp_alt[(unsigned char)'W'] = "AT";
-    
+
     snp_alt[(unsigned char)'s'] = "CG";
     snp_alt[(unsigned char)'S'] = "CG";
-    
+
     snp_alt[(unsigned char)'m'] = "AC";
     snp_alt[(unsigned char)'M'] = "AC";
 
-    snp_alt[(unsigned char)'k'] = "GT";    
+    snp_alt[(unsigned char)'k'] = "GT";
     snp_alt[(unsigned char)'K'] = "GT";
 
-    snp_alt[(unsigned char)'r'] = "AG";    
+    snp_alt[(unsigned char)'r'] = "AG";
     snp_alt[(unsigned char)'R'] = "AG";
-    
+
     snp_alt[(unsigned char)'y'] = "CT";
     snp_alt[(unsigned char)'Y'] = "CT";
-    
+
     snp_alt[(unsigned char)'b'] = "CGT";
     snp_alt[(unsigned char)'B'] = "CGT";
-    
+
     snp_alt[(unsigned char)'d'] = "AGT";
     snp_alt[(unsigned char)'D'] = "AGT";
-    
+
     snp_alt[(unsigned char)'h'] = "ACT";
     snp_alt[(unsigned char)'H'] = "ACT";
-    
+
     snp_alt[(unsigned char)'v'] = "ACG";
     snp_alt[(unsigned char)'V'] = "ACG";
-    
+
     for (size_t i = 0; i < seq.size(); ++i){
         for (size_t j = 0; j < snp_alt[seq[i]].size(); ++j){
             ret.push_back(variant{i,i+1,snp_alt[seq[i]].substr(j,1)});
         }
     }
-    
+
     return ret;
 }
 
