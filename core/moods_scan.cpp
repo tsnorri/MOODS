@@ -18,11 +18,11 @@ namespace MOODS { namespace scan{
     vector< vector<match> > scan_dna(const string& seq, const vector<score_matrix>& matrices,
                                             const vector<double>& bg, const vector<double> thresholds, unsigned int window_size )
     {
-        
+
         Scanner scanner(window_size);
         scanner.set_motifs(matrices, bg, thresholds);
 
-        auto results = scanner.scan(seq);        
+        auto results = scanner.scan(seq);
         return results;
     }
 
@@ -33,7 +33,7 @@ namespace MOODS { namespace scan{
 
         Scanner scanner(window_size, alphabet);
         scanner.set_motifs(matrices, bg, thresholds);
-        
+
         auto results = scanner.scan(seq);
         return results;
     }
@@ -56,17 +56,17 @@ namespace MOODS { namespace scan{
 
         vector<bool> ok(matrices.size(),0);
         size_t remaining = matrices.size();
-        
+
         // first we check which matrices can produce less than target*LIMIT_MULT hits in the first place
         for (size_t i = 0; i < matrices.size(); ++i){
             upper[i] = tools::max_score(matrices[i],4) - tools::min_delta(matrices[i])/2;
         }
-        
+
         Scanner scanner(window_size);
         scanner.set_motifs(matrices, bg, upper);
-    
+
         vector<size_t> results = scanner.counts_max_hits(seq, LIMIT_MULT * target);
-        
+
         for (size_t i = 0; i < matrices.size(); ++i){
             size_t hits = results[i];
             // upper bound is a good limit
@@ -83,7 +83,7 @@ namespace MOODS { namespace scan{
                 remaining--;
             }
         }
-            
+
         // search for the rest of matrices
         // we can assume that some threshold between the consensus score and
         // max score is what we want
@@ -118,7 +118,7 @@ namespace MOODS { namespace scan{
 
             scanner = Scanner(window_size);
             scanner.set_motifs(it_matrices, bg, it_thresholds);
-        
+
             results = scanner.counts_max_hits(seq, LIMIT_MULT * target);
 
             for (size_t j = 0; j < it_indices.size(); ++j){
@@ -157,32 +157,32 @@ namespace MOODS { namespace scan{
 
         scanner = Scanner(window_size);
         scanner.set_motifs(matrices, bg, current);
-        
-        return scanner.scan(seq); 
+
+        return scanner.scan(seq);
 
     }
 
     std::vector<match> naive_scan_dna(const std::string& seq, const score_matrix matrix, double threshold){
 
         vector<unsigned char> alphabet_map (256, 4);
-        
+
         alphabet_map[(unsigned char)'a'] = 0;
         alphabet_map[(unsigned char)'A'] = 0;
-        
+
         alphabet_map[(unsigned char)'c'] = 1;
         alphabet_map[(unsigned char)'C'] = 1;
-        
+
         alphabet_map[(unsigned char)'g'] = 2;
         alphabet_map[(unsigned char)'G'] = 2;
-        
+
         alphabet_map[(unsigned char)'t'] = 3;
-        alphabet_map[(unsigned char)'T'] = 3; 
+        alphabet_map[(unsigned char)'T'] = 3;
 
         size_t m = matrix[0].size();
         vector<match> results;
 
         vector<size_t> bounds = misc::preprocess_seq(seq, 4, alphabet_map);
-        
+
         // Scanning
         for (size_t seq_i = 0; seq_i < bounds.size(); ){
             size_t start = bounds[seq_i];
@@ -210,18 +210,18 @@ namespace MOODS { namespace scan{
     std::vector<match> naive_scan_dna(const std::string& seq, const score_matrix matrix, double threshold, size_t a){
 
         vector<unsigned char> alphabet_map (256, 4);
-        
+
         alphabet_map[(unsigned char)'a'] = 0;
         alphabet_map[(unsigned char)'A'] = 0;
-        
+
         alphabet_map[(unsigned char)'c'] = 1;
         alphabet_map[(unsigned char)'C'] = 1;
-        
+
         alphabet_map[(unsigned char)'g'] = 2;
         alphabet_map[(unsigned char)'G'] = 2;
-        
+
         alphabet_map[(unsigned char)'t'] = 3;
-        alphabet_map[(unsigned char)'T'] = 3; 
+        alphabet_map[(unsigned char)'T'] = 3;
 
         size_t cols = matrix[0].size();
         size_t rows = matrix.size();
@@ -232,7 +232,7 @@ namespace MOODS { namespace scan{
         bits_t MASK = (1 << (SHIFT * q)) - 1;
 
         vector<size_t> bounds = misc::preprocess_seq(seq, 4, alphabet_map);
-        
+
         // Scanning
         for (size_t seq_i = 0; seq_i < bounds.size(); ){
             size_t start = bounds[seq_i];
@@ -263,4 +263,3 @@ namespace MOODS { namespace scan{
         return results;
     }
 }}
-
