@@ -71,7 +71,7 @@ vector<vector<double>> MotifH::max_scores_b(size_t start, size_t end){
         }
 
         for (unsigned int i = 1; i < wsize; ++i){
-            
+
             for (unsigned int j = 0; j < rows; ++j){
                 max_scores[wsize-i-1][j >> SHIFT] = std::max(mat[j][end-i-1] + max_scores[wsize-i][j & Q_MASK], max_scores[wsize-i-1][j >> SHIFT]);
             }
@@ -98,7 +98,7 @@ size_t MotifH::window_position(const vector<double>& es){
         vector<double> ss = this->max_scores_f(start, start + l - q + 1).back();
         window_scores[start] = *std::max_element(ss.begin(), ss.end());
     }
-    
+
 
     // then we just pick the best window
     double current_exp = 0;
@@ -153,13 +153,13 @@ MotifH::MotifH (const score_matrix& matrix, const vector<double>& bg, unsigned i
     this->wp = this->window_position(es);
     this->P = this->max_prefix_scores();
     this->S = this->max_suffix_scores();
-    
+
 }
 
 std::pair<bool, double> MotifH::window_match(bits_t seq, bits_t shift)
 {
     double score = 0;
-        
+
     if (l >= m){
         for (size_t i = 0; i < cols; ++i)
         {
@@ -175,23 +175,23 @@ std::pair<bool, double> MotifH::window_match(bits_t seq, bits_t shift)
             score += mat[c][wp+i];
         }
 
-        
+
         double pot = score;
 
         if (wp > 0){
             bits_t prefix = seq >> (SHIFT * (l - q + 1)); // first q - 1 "characters"
-            
+
             pot += P.back()[prefix];
         }
-        
+
         if (wp < m - l){
             bits_t suffix = seq & ((1 << (SHIFT * (q-1))) - 1); // last q - 1 "characters"
-            
+
             pot += S.front()[suffix];
         }
         return std::make_pair(pot >= T, score);
     }
-    
+
 }
 
 std::pair<bool, double> MotifH::check_hit(const std::string& s, const vector<unsigned char>& alphabet_map, const std::size_t window_match_pos, double score)
@@ -199,7 +199,7 @@ std::pair<bool, double> MotifH::check_hit(const std::string& s, const vector<uns
     if (m <= l){
         return  std::make_pair(true, score); // matrix fits fully to the window, so the window score is what we wanted...
     }
-        
+
     size_t ii = window_match_pos - wp;
     bits_t BACK_CODE = 0;
 
@@ -212,7 +212,7 @@ std::pair<bool, double> MotifH::check_hit(const std::string& s, const vector<uns
 
     // there's some stuff before the window
     if (wp > 0){
-                
+
         double forward_threshold = T;
 
         if (wp < m - l){
@@ -242,7 +242,7 @@ std::pair<bool, double> MotifH::check_hit(const std::string& s, const vector<uns
 
     // stuff after the window
     if (wp < m - l){
-        
+
         // oh look we already precomputed this thing
         bits_t CODE = BACK_CODE;
 
@@ -257,7 +257,7 @@ std::pair<bool, double> MotifH::check_hit(const std::string& s, const vector<uns
             score += mat[CODE][i];
         }
     }
-    
+
     return std::make_pair(score >= T, score);
 }
 
