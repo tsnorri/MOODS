@@ -94,8 +94,6 @@ namespace MOODS { namespace scan{
             }
         }
 
-        bool done = 0;
-
         int iteration = 0;
 
 
