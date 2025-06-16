@@ -323,7 +323,7 @@ score_matrix log_odds(const vector<vector<double>> &mat, const vector<vector<dou
     // lower-order terms for the first position
 
     for (size_t r = 0; r < q-1; ++r){
-        for (size_t PCODE = 0; PCODE < 1 << (SHIFT * r); ++PCODE ){
+        for (size_t PCODE = 0; PCODE < 1U << (SHIFT * r); ++PCODE ){
             double column_sum = 0;
             for (size_t j = 0; j < a; ++j){
                 column_sum += low_order_terms[r][(PCODE << SHIFT) | j] + ps*bg[j];
@@ -331,7 +331,7 @@ score_matrix log_odds(const vector<vector<double>> &mat, const vector<vector<dou
             for (size_t j = 0; j < a; ++j){
                 double lo = log( (low_order_terms[r][(PCODE << SHIFT) | j] + ps*bg[j]) / column_sum) - log(bg[j]);
                 size_t PREFIX = ((PCODE << SHIFT) | j) << (SHIFT * (q - r - 1));
-                for (size_t SCODE = 0; SCODE < 1 << (SHIFT * (q - r - 1)); ++SCODE){
+                for (size_t SCODE = 0; SCODE < 1U << (SHIFT * (q - r - 1)); ++SCODE){
                     ret[PREFIX | SCODE][0] += lo;
                 }
             }
@@ -491,7 +491,7 @@ double threshold_from_p_with_precision(const score_matrix &pssm, const vector<do
 
     vector<vector<double>> table0(Q_CODE_SIZE, vector<double>(R + 1, 0));
 
-    for (size_t CODE = 0; CODE < (1 << (SHIFT * q)); ++CODE){
+    for (size_t CODE = 0; CODE < (1U << (SHIFT * q)); ++CODE){
         // TODO: check correctness later for non-DNA alphs
         double prob = 1;
 
@@ -505,7 +505,7 @@ double threshold_from_p_with_precision(const score_matrix &pssm, const vector<do
     for (size_t i = 1; i < cols; ++i)
     {
         vector<vector<double>> table1(Q_CODE_SIZE, vector<double>(R + 1, 0.0));
-        for (size_t CODE = 0; CODE < (1 << (SHIFT * q)); ++CODE)
+        for (size_t CODE = 0; CODE < (1U << (SHIFT * q)); ++CODE)
         {
             bits_t CODE_PREFIX = (CODE >> SHIFT) & Q_MASK;
             bits_t CODE_SUFFIX = CODE & Q_MASK;
