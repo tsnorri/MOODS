@@ -1,8 +1,9 @@
 #ifndef MATCH_TYPES_H
 #define MATCH_TYPES_H
 
-#include <vector>
+#include <cstddef>
 #include <string>
+#include <vector>
 
 
 namespace MOODS {

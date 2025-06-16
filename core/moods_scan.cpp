@@ -1,11 +1,11 @@
-
-
+#include <cstddef>
+#include <string>
+#include <vector>
 #include "moods.h"
 #include "moods_scan.h"
 #include "moods_misc.h"
 #include "moods_tools.h"
 #include "match_types.h"
-#include "motif.h"
 #include "scanner.h"
 
 using std::vector;

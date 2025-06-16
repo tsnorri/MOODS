@@ -1,12 +1,8 @@
 #ifndef MOODS_H
 #define MOODS_H
 
-
-#include <vector>
-#include <string>
-#include <cmath>
 #include <cstdint>
-#include <limits>
+#include <vector>
 
 // for bit parallel magic
 typedef uint_fast32_t bits_t;

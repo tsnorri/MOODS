@@ -1,10 +1,11 @@
 #ifndef MOTIF_H
 #define MOTIF_H
 
-
-#include "moods.h"
-
+#include <cstddef>
+#include <string>
 #include <utility>
+#include <vector>
+#include "moods.h"
 
 namespace MOODS { namespace scan{
 

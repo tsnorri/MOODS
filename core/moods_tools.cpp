@@ -6,13 +6,16 @@
 // (at your option) any later version, or under the terms of the Biopython
 // License.
 
-
+#include <algorithm>
+#include <cmath>
+#include <cstddef>
+#include <limits>
+#include <string>
+#include <vector>
 #include "moods.h"
 #include "moods_tools.h"
 #include "moods_misc.h"
 #include "match_types.h"
-
-#include <limits>
 
 using std::vector;
 using std::size_t;

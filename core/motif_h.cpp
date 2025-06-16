@@ -6,12 +6,15 @@
 // (at your option) any later version, or under the terms of the Biopython
 // License.
 
-
+#include <algorithm>
+#include <cstddef>
+#include <limits>
+#include <string>
+#include <utility>
+#include <vector>
 #include "moods.h"
 #include "motif.h"
 #include "moods_misc.h"
-
-#include <algorithm>
 
 using std::vector;
 using std::size_t;

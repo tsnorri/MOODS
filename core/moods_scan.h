@@ -1,17 +1,15 @@
 #ifndef MOODS_SCAN_H
 #define MOODS_SCAN_H
 
+#include <cstddef>
 #include <string>
-
+#include <vector>
 #include "moods.h"
 #include "scanner.h"
 #include "match_types.h"
 
 namespace MOODS { namespace scan{
-    
 
-
-    
     std::vector<std::vector<MOODS::match> > scan_dna(const std::string& seq,
                                                 const std::vector<score_matrix>& matrices,
                                                 const std::vector<double>& bg,
@@ -32,7 +30,7 @@ namespace MOODS { namespace scan{
                                                           unsigned int MULT = 2,
                                                           size_t LIMIT_MULT = 10,
                                                           size_t window_size = 7);
-        
+
     std::vector<MOODS::match> naive_scan_dna(const std::string& seq, const score_matrix matrix, double threshold);
     std::vector<MOODS::match> naive_scan_dna(const std::string& seq, const score_matrix matrix, double threshold, size_t a);
 }}

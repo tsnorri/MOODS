@@ -1,12 +1,11 @@
 #ifndef MOODS_SCANNER_H
 #define MOODS_SCANNER_H
 
-#include "moods.h"
-#include "motif.h"
-#include "moods_misc.h"
-#include "match_types.h"
-
 #include <memory>
+#include "match_types.h"
+#include "moods.h"
+#include "moods_misc.h"
+#include "motif.h"
 
 namespace MOODS { namespace scan{
 

@@ -1,3 +1,6 @@
+#include <cstddef>
+#include <string>
+#include <vector>
 #include "moods.h"
 #include "moods_misc.h"
 
@@ -12,17 +15,17 @@ namespace MOODS { namespace misc{
     {
         size_t s = 0;
         size_t b = 1;
-        
+
         while (b < a){
             s += 1;
             b = b << 1;
         }
         return s;
     }
-        
+
     bits_t mask(size_t a){
         bits_t b = 1;
-        
+
         while (b < a){
             b = b << 1;
         }
@@ -32,13 +35,13 @@ namespace MOODS { namespace misc{
     size_t q_gram_size(size_t rows, size_t a){
         size_t q = 0;
         size_t s = 1;
-        
+
 
         while (s < rows){
             q += 1;
             s *= a;
         }
-        return q;   
+        return q;
     }
 
     bits_t rc_tuple(bits_t CODE, size_t a, size_t q){
@@ -56,15 +59,15 @@ namespace MOODS { namespace misc{
 
     // checks a sequence for non-scan regions and returns the corresponding bounds
     std::vector<size_t> preprocess_seq(const std::string& s, size_t a, const std::vector<unsigned char>& alphabet_map){
-        
+
         vector<size_t> bounds;
-        
+
         bool scannable = false;
         unsigned char c;
-        
+
         for (size_t i = 0; i < s.size(); ++i){
             c = alphabet_map[(unsigned char)s[i]];
-            
+
             if (c < a){
                 if (!scannable){
                     scannable = true;
@@ -81,8 +84,8 @@ namespace MOODS { namespace misc{
         if (scannable){
             bounds.push_back(s.size());
         }
-        
+
         return bounds;
-        
+
     }
 }}

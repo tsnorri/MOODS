@@ -6,16 +6,18 @@
 // (at your option) any later version, or under the terms of the Biopython
 // License.
 
-
-#include <utility>
-#include <tuple>
-#include <memory>
 #include <algorithm>
-
+#include <cstddef>
+#include <memory>
+#include <string>
+#include <tuple>
+#include <utility>
+#include <vector>
+#include "match_types.h"
 #include "moods.h"
-#include "scanner.h"
-#include "motif.h"
 #include "moods_misc.h"
+#include "motif.h"
+#include "scanner.h"
 
 using std::vector;
 using std::size_t;
