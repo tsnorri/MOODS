@@ -10,13 +10,17 @@ keywords = ["PWM", "PSSM", "motif scan"]
 readme = "readme.MD"
 license = "GPL-3.0-or-later OR LicenseRef-Biopython"
 license-files = ["COPYING.GPLv3", "COPYING.BIOPYTHON"]
-requires-python= ">=3.6" # setuptools 61 and f-strings require Python 3.6.
+# We currently have the following constraints:
+# – F-strings (used in some of the scripts) require Python 3.6.
+# – setuptools 61, which has tool.setuptools-script-files, requires Python 3.7. 
+# – setuptools 77 is needed or parsing the licence information (above) correctly and requires Python 3.9.
+requires-python= ">=3.9" 
 
 [project.urls]
 Homepage = 'https://www.cs.helsinki.fi/group/pssmfind/'
 
 [build-system]
-requires = ["setuptools >=61", "swig"]
+requires = ["setuptools >=77", "swig"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
